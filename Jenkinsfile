@@ -27,20 +27,21 @@ pipeline {
 
       stage('SAST Scan - SonarQube') {
         steps {
-          withSonarQubeEnv('SonarQube') {
-            sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-application -Dsonar.projectName='numeric-application' -Dsonar.host.url=http://192.168.68.109:9000"
-          }
-          timeout(time: 2, unit: 'MINUTES') {
-            script {
-              waitForQualityGate abortPipeline: true
+          parallel(
+            "SonarQube Scan": {
+              withSonarQubeEnv('SonarQube') {
+                sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-application -Dsonar.projectName='numeric-application' -Dsonar.host.url=http://192.168.68.109:9000"
+              }
+              timeout(time: 2, unit: 'MINUTES') {
+                script {
+                  waitForQualityGate abortPipeline: true
+                }
+              }
+            },
+            "Semgrep scan": {
+              sh 'docker run -v "$(pwd):/src" --workdir /src returntocorp/semgrep-agent:v1 semgrep-agent --config p/ci'
             }
-          }
-        }
-      }
-
-     stage('Semgrep') {
-        steps {
-          sh 'docker run -v "$(WORKSPACE):/src" --workdir /src returntocorp/semgrep-agent:v1 semgrep-agent --config p/ci'
+          )
         }
       }
 
