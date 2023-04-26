@@ -32,7 +32,7 @@ pipeline {
         }
       }
 
-      stage('OWASP Dependency Check & Aqua Trivy Scan - Docker') {
+      stage('Vulnerability Scan - Docker') {
         steps {
           parallel(
             "Dependency Scan": {
@@ -40,6 +40,9 @@ pipeline {
             },
             "Aqua Trivy Scan": {
               sh "bash trivy-docker-image-scan.sh"
+            }
+            "OPA Conftest": {
+              sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
             }
           )    
         }
