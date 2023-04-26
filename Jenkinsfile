@@ -45,6 +45,12 @@ pipeline {
         }
       }
 
+      stage('Dtrack') {
+        steps {
+          sh "bash deptrack.sh"
+        }
+      }
+
       stage('Vulnerability Scan - Docker') {
         steps {
           parallel(
