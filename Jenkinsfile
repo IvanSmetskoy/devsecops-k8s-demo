@@ -3,6 +3,12 @@ pipeline {
 
   environment {
     DOCKERHUB_CREDENTIALS = credentials('docker-hub')
+    deploymentName = "devsecops"
+    containerName = "devsecops-container"
+    serviceName = "devsecops-svc"
+    imageName = "ismetskoy/numeric-app:$GIT_COMMIT"
+    applicationURL = "http://192.168.68.109/"
+    applicationURI = "/increment/99"
   }
 
   stages {
@@ -65,10 +71,18 @@ pipeline {
 
       stage('Kubernetes Deployment - DEV'){
         steps {
-          withKubeConfig([credentialsId: 'kubeconfig']) {
-            sh "sed -i 's#replace#ismetskoy/numeric-app:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
-            sh "kubectl apply -f k8s_deployment_service.yaml" 
-          }
+          parallel(
+            "Deployment": {
+              withKubeConfig([credentialsId: 'kubeconfig']) {
+                sh "bash k8s-deployment.sh"
+              }
+            },
+            "Rollout Status": {
+              withKubeConfig([credentialsId: 'kubeconfig']) {
+                sh "bash k8s-deployment-rollout-status.sh"
+              }
+            }
+          )
         }
       }
 
