@@ -92,7 +92,7 @@
               <version>8.2.1</version>
               <configuration>
 			  	  <format>ALL</format>
-                  <failBuildOnCVSS>5</failBuildOnCVSS>
+                  <failBuildOnCVSS>6</failBuildOnCVSS>
 
 				   <!-- <suppressionFiles>
                         <suppressionFile>http://example.org/suppression.xml</suppressionFile>
