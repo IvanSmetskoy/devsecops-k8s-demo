@@ -40,7 +40,7 @@ pipeline {
 
      stage('Semgrep') {
         steps {
-          sh 'docker run --rm -v "$(pwd):/src" returntocorp/semgrep semgrep --config p/security-audit /src'
+          sh 'docker run --rm -v "$(pwd):/src" --workdir /src returntocorp/semgrep-agent:v1 semgrep-agent --config p/ci'
         }
       }
 
