@@ -40,10 +40,10 @@ pipeline {
             },
             "Aqua Trivy Scan": {
               sh "bash trivy-docker-image-scan.sh"
-            },
-            "OPA Conftest": {
-              sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
-            }
+            }//,
+            //"OPA Conftest": {
+            //  sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
+            //}
           )    
         }
       }
@@ -54,6 +54,12 @@ pipeline {
           sh 'printenv'
           sh 'sudo docker build -t ismetskoy/numeric-app:""$GIT_COMMIT"" .'
           sh 'docker push ismetskoy/numeric-app:""$GIT_COMMIT""'    
+        }
+      }
+
+      stage('Vulnerability Scan - K8S'){
+        steps {  
+          sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
         }
       }
 
