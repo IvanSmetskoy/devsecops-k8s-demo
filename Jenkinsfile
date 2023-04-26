@@ -32,9 +32,16 @@ pipeline {
         }
       }
 
-      stage('OWASP Dependency Check - Docker') {
+      stage('OWASP Dependency Check & Aqua Trivy Scan - Docker') {
         steps {
-          sh "mvn dependency-check:check"
+          parallel(
+            "Dependency Scan": {
+              sh "mvn dependency-check:check"
+            },
+            "Aqua Trivy Scan": {
+              sh "bash trivy-docker-image-scan.sh"
+            }
+          )    
         }
       }
 
