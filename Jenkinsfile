@@ -38,6 +38,12 @@ pipeline {
         }
       }
 
+      stage('Semgrep') {
+        steps {
+          sh 'docker run --rm -v "$(pwd)/project:/src" returntocorp/semgrep semgrep --config p/security-audit /src'
+        }
+      }
+
       stage('Vulnerability Scan - Docker') {
         steps {
           parallel(
