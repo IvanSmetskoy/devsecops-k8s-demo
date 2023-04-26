@@ -1,12 +1,3 @@
-def find_semgrep_breaches_in_project(project, directory) {
-    sh "find ${project}  \\( -exec test -d '{}'/.git \\; \\) -exec git config --global --add safe.directory {} \\;"
-    sh "find ${directory}/${project}  \\( -exec test -d '{}'/.git \\; \\) -exec semgrep --no-force-color -c ${directory}/semgrep-rules/java -l java -o {}/semgrep.log  {} \\;"
-}
-
-def remove_empty_semgrep_reports(project) {
-    sh "find ${project} -name semgrep.log -type f -empty -delete"
-}
-
 pipeline {
   agent any
 
@@ -19,10 +10,6 @@ pipeline {
     applicationURL = "http://192.168.68.109/"
     applicationURI = "/increment/99"
   }
-
-   parameters {
-        booleanParam defaultValue: true, name: 'ENABLE_SEMGREP'
-    }
 
   stages {
       stage('Build Artifact - Maven') {
@@ -51,39 +38,11 @@ pipeline {
         }
       }
 
-     //stage('Semgrep') {
-        //steps {
-          //sh 'docker run --rm -v "$(pwd)/src" returntocorp/semgrep semgrep --config p/security-audit /src'
-        //}
-      //}
-
-      stage('semgrep') {
-            when {
-                expression {
-                    params.ENABLE_SEMGREP.toBoolean()
-                }
-            }
-  
-            agent {
-                docker {
-                    image 'returntocorp/semgrep'
-                    reuseNode true
-                    args '-i -u root --entrypoint='
-                }
-            }
-  
-            steps {
-                script {
-                    projects.each { project ->
-                        stage("Checking ${project}") {
-                            find_semgrep_breaches_in_project(project, env.WORKSPACE)
-                            remove_empty_semgrep_reports(project)
-                            archiveArtifacts artifacts: "${project}/**/semgrep.log", allowEmptyArchive: true
-                        }
-                    }
-                }
-            }
+     stage('Semgrep') {
+        steps {
+          sh 'docker run --rm -v "$(pwd):/src" returntocorp/semgrep semgrep --config p/security-audit /src'
         }
+      }
 
       stage('Vulnerability Scan - Docker') {
         steps {
