@@ -56,10 +56,10 @@ warn[msg] {
 }
 
 # Do not use ADD if possible
-#deny[msg] {
-#    input[i].Cmd == "add"
-#    msg = sprintf("Line %d: Use COPY instead of ADD", [i])
-#}
+deny[msg] {
+    input[i].Cmd == "add"
+    msg = sprintf("Line %d: Use COPY instead of ADD", [i])
+}
 
 # Any user...
 any_user {
@@ -101,7 +101,7 @@ multi_stage = true {
     val := concat(" ", input[i].Flags)
     contains(lower(val), "--from=")
 }
-deny[msg] {
-    multi_stage == false
-    msg = sprintf("You COPY, but do not appear to use multi-stage builds...", [])
-}
+#deny[msg] {
+#    multi_stage == false
+#    msg = sprintf("You COPY, but do not appear to use multi-stage builds...", [])
+#}
