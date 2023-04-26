@@ -49,7 +49,7 @@ pipeline {
         steps {
           sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
           sh 'printenv'
-          sh 'docker build -t ismetskoy/numeric-app:""$GIT_COMMIT"" .'
+          sh 'sudo docker build -t ismetskoy/numeric-app:""$GIT_COMMIT"" .'
           sh 'docker push ismetskoy/numeric-app:""$GIT_COMMIT""'    
         }
       }
