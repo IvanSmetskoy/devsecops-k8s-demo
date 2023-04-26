@@ -23,8 +23,8 @@
 		<snakeyaml.version>2.0</snakeyaml.version>
 		<spring-framework.version>5.2.24.RELEASE</spring-framework.version>
 		<logback.version>1.2.9</logback.version>
-		<jackson-bom.version>2.13.4</jackson-bom.version>
-		
+		<jackson-bom.version>2.13.5</jackson-bom.version>
+		<glassfish-el.version>3.0.4</glassfish-el.version>
 	</properties>
 
 	<dependencies>
