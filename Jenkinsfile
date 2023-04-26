@@ -25,7 +25,7 @@ pipeline {
             }
         }
 
-      stage('SAST Scan - SonarQube') {
+      stage('SAST Scan') {
         steps {
           parallel(
             "SonarQube Scan": {
@@ -39,7 +39,7 @@ pipeline {
               }
             },
             "Semgrep scan": {
-              sh 'docker run -v "$(pwd):/src" --workdir /src returntocorp/semgrep-agent:v1 semgrep-agent --config p/ci'
+              sh 'docker run -v "$(pwd):/src" --workdir /src returntocorp/semgrep-agent:v1 semgrep-agent --config p/ci --config p/security-audit --config p/secrets'
             }
           )
         }
