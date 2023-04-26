@@ -49,6 +49,17 @@ pipeline {
         }
       }
 
+      stage('OWASP Dependency Check - Docker') {
+        steps {
+          sh "mvn dependency-check:check"
+        }
+        post {
+          always {
+            dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+          }
+        }
+      }
+
       stage('Docker Build and Push'){
         steps {
           sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
