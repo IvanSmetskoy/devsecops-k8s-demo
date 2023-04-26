@@ -66,7 +66,7 @@ pipeline {
   
             agent {
                 docker {
-                    image 'returntocorp/semgrep@sha256:22cdfb541673843cf8950df1a9cc386237435517f41f0d40bd9b7e306076441f'
+                    image 'returntocorp/semgrep'
                     reuseNode true
                     args '-i -u root --entrypoint='
                 }
