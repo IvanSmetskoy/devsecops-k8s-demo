@@ -1,6 +1,8 @@
 #!/bin/bash
 #cis-master.sh
 
+chmod 644 /var/lib/kubelet/config.yaml
+
 total_fail=$(kube-bench run master  --version 1.15 --check 1.2.7,1.2.8,1.2.9 --json | jq .Totals.total_fail)
 
 if [[ "$total_fail" -ne 0 ]];
