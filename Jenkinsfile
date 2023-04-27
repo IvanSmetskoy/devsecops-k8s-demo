@@ -148,14 +148,12 @@ pipeline {
 
            parallel(
              "Master": {
-               sh "chmod +x -R ${env.WORKSPACE}"
                sh "bash cis-master.sh"
              },
              "Etcd": {
                sh "bash cis-etcd.sh"
              },
              "Kubelet": {
-               sh "chmod +x -R ${env.WORKSPACE}"
                sh "bash cis-kubelet.sh"
              }
            )
