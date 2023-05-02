@@ -180,8 +180,6 @@ pipeline {
         }
       }
 
-
-
     }
 
     post {
