@@ -8,7 +8,7 @@ pipeline {
     containerName = "devsecops-container"
     serviceName = "devsecops-svc"
     imageName = "ismetskoy/numeric-app:$GIT_COMMIT"
-    applicationURL = "http://10.219.1.1"
+    applicationURL = "http://10.219.1.200"
     applicationURI = "/increment/99"
   }
 
@@ -31,7 +31,7 @@ pipeline {
           parallel(
             "SonarQube Scan": {
               withSonarQubeEnv('SonarQube') {
-                sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-application -Dsonar.projectName='numeric-application' -Dsonar.host.url=http://10.219.1.1:9000"
+                sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-application -Dsonar.projectName='numeric-application' -Dsonar.host.url=http://10.219.1.200:9000"
               }
               timeout(time: 2, unit: 'MINUTES') {
                 script {
